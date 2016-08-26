@@ -53,36 +53,32 @@ class TermTypeController extends Controller {
 	 */
 	public function store(Request $req)
 	{
-		//rule
-		$rules=[
-			'type'=>'required|regex:/^[\pL\s]+$/u'
-		];
-		//message
-		$error_messages=[
-			'type.required'=>'يجب أدخال نوع البند',
-			'type.regex'=>'يجب نوع البند أن يتكون من حروف و مسافات فقط'
-		];
-		$validator=Validator::make($req->all(),$rules,$error_messages);
-		if($validator->fails())
-			return redirect()->back()->withInput()->withErrors($validator);
-		$term_type= new TermType;
-		$term_type->name=$req->input('type');
-		$saved=$term_type->save();
-		if(!$saved)
-			return redirect()->back()->with('insert_error','حدث عطل خلال أدخال نوع بند جديد');
-		return redirect()->route('alltermtype')->with('success','تم حفظ نوع بند بنجاح');
+		if(Auth::user()->type=='admin')
+		{
+			//rule
+			$rules=[
+				'type'=>'required|regex:/^[\pL\s]+$/u|unique:term_types,name|max:255'
+			];
+			//message
+			$error_messages=[
+				'type.required'=>'يجب أدخال نوع البند',
+				'type.regex'=>'يجب نوع البند أن يتكون من حروف و مسافات فقط',
+				'type.max'=>'عدد الحروف تعدى العدد المسموح',
+				'type.unique'=>'هذا النوع موجود بالفعل'
+			];
+			$validator=Validator::make($req->all(),$rules,$error_messages);
+			if($validator->fails())
+				return redirect()->back()->withInput()->withErrors($validator);
+			$term_type= new TermType;
+			$term_type->name=$req->input('type');
+			$saved=$term_type->save();
+			if(!$saved)
+				return redirect()->back()->with('insert_error','حدث عطل خلال أدخال نوع بند جديد');
+			return redirect()->route('alltermtype')->with('success','تم حفظ نوع بند بنجاح');
+		}else
+			abort('404');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -93,6 +89,15 @@ class TermTypeController extends Controller {
 	public function edit($id)
 	{
 		//
+		if(Auth::user()->type=='admin')
+		{
+			$type=TermType::findOrFail($id);
+			$array=['active'=>'term','type'=>$type];
+			return view('term.edittype',$array);
+		}
+		else
+			abort('404');
+
 	}
 
 	/**
@@ -101,9 +106,32 @@ class TermTypeController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Request $req,$id)
 	{
-		//
+		if(Auth::user()->type=='admin')
+		{
+			//rule
+			$rules=[
+				'type'=>'required|regex:/^[\pL\s]+$/u|unique:term_types,name|max:255'
+			];
+			//message
+			$error_messages=[
+				'type.required'=>'يجب أدخال نوع البند',
+				'type.regex'=>'يجب نوع البند أن يتكون من حروف و مسافات فقط',
+				'type.max'=>'عدد الحروف تعدى العدد المسموح',
+				'type.unique'=>'هذا النوع موجود بالفعل'
+			];
+			$validator=Validator::make($req->all(),$rules,$error_messages);
+			if($validator->fails())
+				return redirect()->back()->withInput()->withErrors($validator);
+			$term_type= TermType::findOrFail($id);
+			$term_type->name=$req->input('type');
+			$saved=$term_type->save();
+			if(!$saved)
+				return redirect()->back()->with('insert_error','حدث عطل خلال تعديل نوع البند');
+			return redirect()->route('alltermtype')->with('success','تم تعديل نوع البند بنجاح');
+		}else
+			abort('404');
 	}
 
 	/**

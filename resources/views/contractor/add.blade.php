@@ -108,20 +108,6 @@
 				@endif
 			</div>
 		</div>
-		<?php $old_role=old('role'); ?>
-		<div class="form-group @if($errors->has('role')) has-error @endif">
-			<label for="role" class="control-label col-sm-2 col-md-2 col-lg-2">دور المقاول</label>
-			<div class="col-sm-8 col-md-8 col-lg-8">
-				<label><input type="radio" name="role" value="raw" id="" checked> مورد خامات  </label>
-				<label><input type="radio" name="role" value="labor" id="" @if($old_role=='labor') checked @endif > مورد عمالة  </label>
-				<label><input type="radio" name="role" value="both" id="" @if($old_role=='both') checked @endif > كلاهما </label>
-				@if($errors->has('role'))
-					@foreach($errors->get('role') as $error)
-						<span class="help-block">{{ $error }}</span>
-					@endforeach
-				@endif
-			</div>
-		</div>
 		<div class="col-sm-2 col-md-2 col-lg-2 col-sm-offset-5 col-md-offset-5 col-lg-offset-5">
 			<button class="btn btn-primary form-control" id="save_btn">حفظ</button>
 		</div>

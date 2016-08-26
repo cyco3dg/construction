@@ -25,9 +25,10 @@
 				<tr><th style="min-width: 100px;">الجملة </th><td>{{$term->amount*$term->value}}</td></tr>
 			</table>
 			<a href="{{route('termcontract',$term->id)}}" class="float btn btn-primary">عقد البند</a>
+			<a href="{{route('addproduction',$term->id)}}" class="float btn btn-primary">أضافة أنتاج</a>
 			<a href="{{route('updateterm',$term->id)}}" class="float btn btn-default">تعديل</a>
 			<form action="{{route('deleteterm',$term->id)}}" class="float">
-				<button type="button" data-toggle="modal" data-target="#delete" class="btn width-100 btn-danger">حذف</button>
+				<button type="button" data-toggle="modal" data-target="#delete" class="btn btn-danger">حذف</button>
 				<div class="modal fade" id="delete" tabindex="-1" role="dialog">
 					<div class="modal-dialog modal-sm">
 						<div class="modal-content">
@@ -56,8 +57,7 @@
 		<div class="panel-body">
 			@if(count($productions)>0)
 			@foreach($productions as $production)
-				<div class="bordered-right"> 
-					<a href="" class="whole">
+				<div class="bordered-right whole"> 
 					<h4>تقييم {{$production->rate}}</h4> 
 					<p>
 						<span class="label label-default">كمية الأنتاج</span>
@@ -67,17 +67,19 @@
 						<span class="label label-default">ملحوظة</span>
 						 {{$production->note}}
 						@endif
+						<br>
+						<span class="label label-default">تاريخ الأنتاج</span>
+						 {{$production->created_at->format('Y-m-d')}}
 					</p> 
-					</a>
 				</div>
 			@endforeach
 			<div class="row item" style="text-align: center;">
-				<a href="{{ url('production/all') }}" class="btn btn-default">
+				<a href="{{ route('showtermproduction',$term->id) }}" class="btn btn-default">
 					مجموع الأنتاج
 				</a>
 			</div>
 			@else
-				<div class="alert alert-warning">لا يوجد أنتاج</div>
+				<div class="alert alert-warning">لا يوجد أنتاج <a href="{{ route('addproduction',$term->id) }}" class="btn btn-warning">أضافة أنتاج</a></div>
 			@endif
 		</div>
 	</div>

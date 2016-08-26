@@ -5,7 +5,7 @@
 <div class="content">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3>أضافة خامات الى المخازن</h3>
+			<h3>أضافة خامات الى المخازن @if(isset($project)) بمشروع <a href="{{ route('showproject',$project->id) }}">{{$project->name}}</a> @endif </h3>
 		</div>
 		<div class="panel-body">
 			@if (count($errors) > 0)
@@ -31,15 +31,20 @@
 					</ul>
 				</div>
 			@endif
+			@if(( (isset($projects)&&count($projects)>0) || isset($project)) && ((isset($suppliers)&&count($suppliers)>0)||isset($supplier)) && count($store_types)>0)
 			<form method="post" action="{{ route('addstore') }}" class="form-horizontal">
 				<div class="form-group @if($errors->has('project_id')) has-error @endif">
 					<label for="project_id" class="control-label col-sm-2 col-md-2 col-lg-2">أختار مشروع</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
 						<select name="project_id" id="project_id" class="form-control">
+							@if(isset($project))
+							<option value="{{$project->id}}">{{$project->name}}</option>
+							@else
 							<option value="0">أختار مشروع</option>
 							@foreach($projects as $project)
 							<option value="{{$project->id}}" @if(old('project_id')==$project->id) selected @endif >{{$project->name}}</option>
 							@endforeach
+							@endif
 						</select>
 						@if($errors->has('project_id'))
 							@foreach($errors->get('project_id') as $error)
@@ -48,26 +53,46 @@
 						@endif
 					</div>
 				</div>
-				<div class="form-group @if($errors->has('contractor_id')) has-error @endif">
-					<label for="contractor_id" class="control-label col-sm-2 col-md-2 col-lg-2">أختار المقاول المورد</label>
+				<div class="form-group @if($errors->has('supplier_id')) has-error @endif">
+					<label for="supplier_id_choose" class="control-label col-sm-2 col-md-2 col-lg-2">أختار المقاول المورد</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
-						<select  name="contractor_id" id="contractor_id" class="form-control">
-							<option value="0">أختار المقاول المورد</option>
-							@foreach($contractors as $contractor)
-							<option value="{{$contractor->id}}"  @if(old('contractor_id')==$contractor->id) selected @endif >{{$contractor->name}}</option>
-							@endforeach
+						<select  name="supplier_id" id="supplier_id_choose" class="form-control">
+						@if(isset($supplier))
+						<option value="{{$supplier->id}}">{{$supplier->name}}</option>
+						@else
+						<option value="0">أختار المورد</option>
+						@foreach($suppliers as $supplier)
+						<option value="{{$supplier->id}}"  @if(old('supplier_id')==$supplier->id) selected @endif >{{$supplier->name}}</option>
+						@endforeach
+						@endif
 						</select>
-						@if($errors->has('contractor_id'))
-							@foreach($errors->get('contractor_id') as $error)
+						@foreach($suppliers as $supplier)
+						<input type="hidden" name="{{$supplier->id}}" value="{{$supplier->type}}"> 
+						@endforeach
+						@if($errors->has('supplier_id'))
+							@foreach($errors->get('supplier_id') as $error)
 								<span class="help-block">{{ $error }}</span>
 							@endforeach
 						@endif
 					</div>
 				</div>
 				<div class="form-group @if($errors->has('type')) has-error @endif">
-					<label for="type" class="control-label col-sm-2 col-md-2 col-lg-2">نوع الخام</label>
+					<label for="type_supplier" class="control-label col-sm-2 col-md-2 col-lg-2">نوع الخام</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
-						<input type="text" name="type" id="type" class="form-control" placeholder="أدخل نوع الخام" value="{{old('type')}}">
+						<select id="type_supplier" name="type" class="form-control">
+						<option value="0">أختار نوع الخام</option>
+						@foreach($store_types as $type)
+						@if(old('type')==$type->name)
+						<option value="{{$type->name}}" selected>{{$type->name}}</option>
+						@else
+						<option value="{{$type->name}}">{{$type->name}}</option>
+						@endif
+						@endforeach
+						</select>	
+						@foreach($store_types as $type)
+						<input type="hidden" name="store_type[]" value="{{$type->name}}"> 
+						<input type="hidden" name="{{$type->name}}" value="{{$type->unit}}">
+						@endforeach
 						@if($errors->has('type'))
 							@foreach($errors->get('type') as $error)
 								<span class="help-block">{{ $error }}</span>
@@ -78,20 +103,12 @@
 				<div class="form-group @if($errors->has('amount')) has-error @endif">
 					<label for="amount" class="control-label col-sm-2 col-md-2 col-lg-2">الكمية</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
-						<input type="text" name="amount" id="amount" class="form-control" placeholder="أدخل الكمية" value="{{old('amount')}}">
+						<div class="input-group">
+							<input type="text" name="amount" id="amount" value="{{old('amount')}}" class="form-control" placeholder="أدخل الكمية" aria-describedby="basic-addon1">
+							<span class="input-group-addon" id="basic-addon1"></span>
+						</div>	
 						@if($errors->has('amount'))
 							@foreach($errors->get('amount') as $error)
-								<span class="help-block">{{ $error }}</span>
-							@endforeach
-						@endif
-					</div>
-				</div>
-				<div class="form-group @if($errors->has('unit')) has-error @endif">
-					<label for="unit" class="control-label col-sm-2 col-md-2 col-lg-2">الوحدة</label>
-					<div class="col-sm-8 col-md-8 col-lg-8">
-						<input type="text" name="unit" id="unit" class="form-control" placeholder="أدخل الوحدة" value="{{old('unit')}}">
-						@if($errors->has('unit'))
-							@foreach($errors->get('unit') as $error)
 								<span class="help-block">{{ $error }}</span>
 							@endforeach
 						@endif
@@ -124,6 +141,27 @@
 				</div>
 				<input type="hidden" name="_token" value="{{csrf_token()}}">
 			</form>
+			@else
+			<div class="alert alert-warning">
+				<p><strong>تحذير</strong></p>
+				<div>
+					@if(count($suppliers)==0)
+					<p>لابد من وجود مورديين 
+					<a href="{{ route('addsupplier') }}" class="btn btn-warning">أضافة مورد</a>
+					</p>
+					@endif
+					@if(count($projects)==0)
+					<p>لابد من وجود مشروعات 
+					<a href="{{ route('addproject') }}" class="btn btn-warning">أضافة مشروع</a>
+					</p>
+					@endif
+					@if(count($store_types)==0)
+					<p>لابد من وجود أنواع الخامات 
+					<a href="{{ route('addstoretype') }}" class="btn btn-warning">أضافة نوع خام</a></p>
+					@endif
+				</div>
+			</div>
+			@endif
 		</div>
 	</div>
 </div>

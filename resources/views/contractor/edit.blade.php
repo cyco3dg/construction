@@ -11,6 +11,9 @@
 		@if (count($errors) > 0)
 			<div class="alert alert-danger">
 				<strong>خطأ</strong>
+				@foreach($errors as $error)
+					{{$error}}
+				@endforeach
 			</div>
 		@endif
 		@if(session('update_error'))
@@ -46,7 +49,11 @@
 		<div class="form-group @if($errors->has('type')) has-error @endif">
 			<label for="type" class="control-label col-sm-2 col-md-2 col-lg-2">نوع المقاول</label>
 			<div class="col-sm-8 col-md-8 col-lg-8">
-				<input type="text" name="type" id="type" value="{{$contractor->type}}" class="form-control" placeholder="أدخل نوع المقاول">
+				@foreach($term_types as $type)
+				<label @if($errors->has('type')) style="color: #a94442" @endif>
+				<input type="checkbox" name="type[]" value="{{$type->name}}" @if(in_array($type->name,$contractor_types)) checked @endif > {{$type->name}}
+				</label>
+				@endforeach
 				@if($errors->has('type'))
 					@foreach($errors->get('type') as $error)
 						<span class="help-block">{{ $error }}</span>
@@ -93,25 +100,6 @@
 				<input type="text" name="phone" id="phone" value="{{$contractor->phone}}" class="form-control" placeholder="أدخل التليفون">
 				@if($errors->has('phone'))
 					@foreach($errors->get('phone') as $error)
-						<span class="help-block">{{ $error }}</span>
-					@endforeach
-				@endif
-			</div>
-		</div>
-		<div class="form-group @if($errors->has('role')) has-error @endif">
-			<label for="role" class="control-label col-sm-2 col-md-2 col-lg-2">دور المقاول</label>
-			<div class="col-sm-8 col-md-8 col-lg-8">
-				<label>
-					<input type="radio" name="role" value="raw" id="" @if($contractor->role=='raw') checked @endif> مورد خامات  
-				</label>
-				<label>
-					<input type="radio" name="role" value="labor" id="" @if($contractor->role=='labor') checked @endif> مورد عمالة  
-				</label>
-				<label>
-					<input type="radio" name="role" value="both" id="" @if($contractor->role=='both') checked @endif> كلاهما 
-				</label>
-				@if($errors->has('role'))
-					@foreach($errors->get('role') as $error)
 						<span class="help-block">{{ $error }}</span>
 					@endforeach
 				@endif

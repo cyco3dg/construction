@@ -24,4 +24,10 @@ class Term extends Model {
 	{
 		return $this->hasMany('App\Consumption');
 	}
+	//1 to many with Transactions
+	public function transactions()
+	{
+		return $this->hasMany('App\Transaction');
+	}
+
 }

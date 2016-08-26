@@ -23,7 +23,7 @@ class CreateDbRelations extends Migration {
 		//Create m to m relation between Projects and Raw Suppliers
 		//The Stores table in fact is a bridge table between Raw Suppliers and Projects
 		Schema::table('stores',function(Blueprint $table){
-			$table->foreign('contractor_id')->references('contractor_id')->on('raw_suppliers');
+			$table->foreign('supplier_id')->references('supplier_id')->on('raw_suppliers');
 			$table->foreign('project_id')->references('id')->on('projects');			
 		});
 

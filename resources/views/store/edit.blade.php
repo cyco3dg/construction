@@ -13,12 +13,12 @@
 					<strong>خطأ</strong>
 				</div>
 			@endif
-			@if(session('insert_error'))
+			@if(session('update_error'))
 				<div class="alert alert-danger">
 					<strong>خطأ</strong>
 					<br>
 					<ul>
-						<li>{{ session('insert_error') }}</li>
+						<li>{{ session('update_error') }}</li>
 					</ul>
 				</div>
 			@endif
@@ -48,17 +48,17 @@
 						@endif
 					</div>
 				</div>
-				<div class="form-group @if($errors->has('contractor_id')) has-error @endif">
-					<label for="contractor_id" class="control-label col-sm-2 col-md-2 col-lg-2">أختار المقاول المورد</label>
+				<div class="form-group @if($errors->has('supplier_id')) has-error @endif">
+					<label for="supplier_id" class="control-label col-sm-2 col-md-2 col-lg-2">أختار المقاول المورد</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
-						<select  name="contractor_id" id="contractor_id" class="form-control">
+						<select  name="supplier_id" id="supplier_id" class="form-control">
 							<option value="0">أختار المقاول المورد</option>
-							@foreach($contractors as $contractor)
-							<option value="{{$contractor->id}}">{{$contractor->name}}</option>
+							@foreach($suppliers as $supplier)
+							<option value="{{$supplier->id}}">{{$supplier->name}}</option>
 							@endforeach
 						</select>
-						@if($errors->has('contractor_id'))
-							@foreach($errors->get('contractor_id') as $error)
+						@if($errors->has('supplier_id'))
+							@foreach($errors->get('supplier_id') as $error)
 								<span class="help-block">{{ $error }}</span>
 							@endforeach
 						@endif

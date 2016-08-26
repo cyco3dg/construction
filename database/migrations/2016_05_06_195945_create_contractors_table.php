@@ -21,7 +21,6 @@ class CreateContractorsTable extends Migration {
 			$table->string('city',20)->nullable();
 			$table->string('phone')->nullable();
 			$table->string('type')->nullable();
-			$table->enum('role',['raw','labor','both']);
 			$table->integer('user_id')->nullable()->unsigned()->unique();
 			$table->timestamps();
 

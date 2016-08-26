@@ -155,7 +155,8 @@ class ProjectController extends Controller {
 			$project->implementing_period=$req->input('implementing_period');
 			$project->floor_num=$req->input('floor_num');
 			$project->approximate_price=$req->input('approximate_price');
-			$project->started_at=$req->input('started_at');
+			if(!empty($req->input('started_at')))
+				$project->started_at=$req->input('started_at');
 			$project->model_used=$req->input('model_used');
 
 			$saved=$project->save();
@@ -245,17 +246,29 @@ class ProjectController extends Controller {
 	public function show($id)
 	{
 		if(Auth::user()->type=='admin'){
-			//
+			// 
 			$project=Project::findOrFail($id);
 			$org=$project->organization;
-			$startedTerms=$project->terms()->where('started_at','<=',Carbon::today())->where('done',0)->orderBy('started_at','asc')->take(3)->get();
+			$startedTerms=$project->terms()
+				->where('started_at','<=',Carbon::today())
+				->where('done',0)
+				->orderBy('started_at','asc')
+				->take(3)
+				->get();
 			$notStartedTerms=$project->terms()
 				->where('done',0)
-				->where('started_at','>',Carbon::today())
-				->orWhere('started_at',null)
+				->where(function($query){
+					$query->where('started_at','>',Carbon::today())
+						->orWhere('started_at',null);
+				})
 				->orderBy('started_at','asc')
-				->take(3)->get();
-			$doneTerms=$project->terms()->where('done',1)->orderBy('started_at','desc')->take(3)->get();
+				->take(3)
+				->get();
+			$doneTerms=$project->terms()
+				->where('done',1)
+				->orderBy('started_at','desc')
+				->take(3)
+				->get();
 			$array=[
 				'active'=>'project',
 				'project'=>$project,
@@ -263,7 +276,6 @@ class ProjectController extends Controller {
 				'startedTerms'=>$startedTerms,
 				'notStartedTerms'=>$notStartedTerms,
 				'doneTerms'=>$doneTerms
-
 			];
 			return view('project.show',$array);
 		}else

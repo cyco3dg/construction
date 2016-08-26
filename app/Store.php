@@ -9,9 +9,9 @@ class Store extends Model {
 	{
 		return $this->belongsTo('App\Project');
 	}
-	//1 to many with raw_supplier
-	public function contractor()
+	//1 to many with Contractor
+	public function supplier()
 	{
-		return $this->belongsTo('App\Contractor');
+		return $this->belongsTo('App\Supplier');
 	}
 }

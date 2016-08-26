@@ -9,7 +9,7 @@
 			</h3>
 		</div>
 		<div class="panel-body">
-			<form method="post" action="{{ route('allstores') }}" class="form-horizontal">
+			<form method="post" action="{{ route('findallstores') }}" class="form-horizontal">
 				<div class="form-group @if($errors->has('project_id')) has-error @endif">
 					<label for="project_id" class="control-label col-sm-2 col-md-2 col-lg-2">أختار مشروع</label>
 					<div class="col-sm-6 col-md-6 col-lg-6">
@@ -42,8 +42,8 @@
 							<th>الكمية المستهلكة</th>
 							<th>الكمية الباقية</th>
 							<th>الكمية الكلية</th>
-							<th>القيمة المدفوعة</th>
 							<th>الوحدة</th>
+							<th>القيمة المدفوعة</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,8 +65,12 @@
 							<td>{{$store->amount}}</td>
 							@endif
 							<td>{{$store->amount}}</td>
+							@foreach($store_types as $type)
+							@if($type->name==$store->type)
+							<td>{{$type->unit}}</td>
+							@endif
+							@endforeach
 							<td>{{$store->amount_paid}}</td>
-							<td>{{$store->unit}}</td>
 						</tr>
 						@endforeach
 					</tbody>

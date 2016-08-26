@@ -26,7 +26,7 @@
 					<label for="contractor_id" class="control-label col-sm-2 col-md-2 col-lg-2">نص العقد</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
 						<select name="contractor_id" id="contractor_id" class="form-control">
-							<option value="0">أختار مقاول</option>
+							<option value="">أختار مقاول</option>
 							@foreach($contractors as $contractor)
 							<option value="{{$contractor->id}}">{{$contractor->name}}</option>
 							@endforeach
@@ -61,9 +61,9 @@
 					</div>
 				</div>
 				<div class="form-group @if($errors->has('started_at')) has-error @endif">
-					<label for="started_at" class="control-label col-sm-2 col-md-2 col-lg-2">تاريخ استلام الموقع</label>
+					<label for="started_at" class="control-label col-sm-2 col-md-2 col-lg-2">تاريخ بداية تنفيذ البند</label>
 					<div class="col-sm-8 col-md-8 col-lg-8">
-						<input type="text" name="started_at" id="started_at" value="{{old('started_at')}}" class="form-control" placeholder="أدخل تاريخ استلام الموقع">
+						<input type="text" name="started_at" id="started_at" value="{{old('started_at')}}" class="form-control" placeholder="أدخل تاريخ بداية تنفيذ البند">
 						@if($errors->has('started_at'))
 							@foreach($errors->get('started_at') as $error)
 								<span class="help-block">{{ $error }}</span>

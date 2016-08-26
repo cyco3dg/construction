@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Store;
 use App\Project;
-use App\Contractor;
+use App\Supplier;
+use App\StoreType;
 
 use Auth;
 use DB;
@@ -29,11 +30,19 @@ class StoreController extends Controller {
 					->groupBy('type')
 					->get();
 			$stores=Store::where('project_id',$id)
-					->selectRaw('type, sum(amount) as amount , unit,sum(amount_paid) as amount_paid')
+					->selectRaw('type, sum(amount) as amount ,sum(amount_paid) as amount_paid')
 					->groupBy('type')
 					->get();
 			$projects=Project::where('done','=',0)->orderBy('name')->get();
-			$array=['active'=>'store','stores'=>$stores,'project'=>$project,'consumptions'=>$consumptions,'projects'=>$projects];
+			$store_types=StoreType::all();
+			$array=[
+				'active'=>'store',
+				'stores'=>$stores,
+				'project'=>$project,
+				'consumptions'=>$consumptions,
+				'projects'=>$projects,
+				'store_types'=>$store_types
+			];
 			return view('store.all',$array);
 		}		
 		else
@@ -75,7 +84,7 @@ class StoreController extends Controller {
 			if($validator->fails()){
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-			return redirect('store/all/'.$req->input('project_id'));
+			return redirect()->route('allstores',$req->input('project_id'));
 		}		
 		else
 			abort('404');	
@@ -90,16 +99,22 @@ class StoreController extends Controller {
 	{
 		if(Auth::user()->type=='admin'){
 			if($cid!=null && $cid!=0){
-				$contractors=Contractor::where('id',$cid)->whereIn('role',['raw','both'])->get();
+				$supplier=Supplier::where('id',$cid)->firstOrFail();
+				$array['supplier']=$supplier;
 			}else{
-				$contractors=Contractor::whereIn('role',['both','raw'])->get();
+				$suppliers=Supplier::all();
+				$array['suppliers']=$suppliers;
 			}
 			if($pid!=null){
-				$projects=Project::where('id',$pid)->where('done',0)->get();
+				$project=Project::where('id',$pid)->where('done',0)->firstOrFail();
+				$array['project']=$project;
 			}else{
 				$projects=Project::where('done',0)->get();
+				$array['projects']=$projects;
 			}
-			$array=['contractors'=>$contractors,'projects'=>$projects,'active'=>'store'];
+			$store_types=StoreType::all();
+			$array['active']='store';
+			$array['store_types']=$store_types;
 			return view('store.add',$array);
 		}		
 		else
@@ -116,22 +131,21 @@ class StoreController extends Controller {
 		if(Auth::user()->type=='admin'){
 			$rules=[
 				'project_id'=>'required|exists:projects,id',
-				'contractor_id'=>'required|exists:contractors,id',
-				'type'=>'required',
+				'supplier_id'=>'required|exists:suppliers,id',
+				'type'=>'required|exists:store_types,name',
 				'amount'=>'required|numeric',
-				'unit'=>'required',
 				'value'=>'required|numeric',
 				'amount_paid'=>'required|numeric'
 			];
 			$error_messages=[
 				'project_id.required'=>'يجب أختيار مشروع',
 				'project_id.exists'=>'المشروع يجب أن يكون موجود بقاعدة البيانات',
-				'contractor_id.required'=>'يجب أختيار مقاول',
-				'contractor_id.exists'=>'المقاول يجب أن يكون موجود بقاعدة البيانات',
+				'supplier_id.required'=>'يجب أختيار مقاول',
+				'supplier_id.exists'=>'المقاول يجب أن يكون موجود بقاعدة البيانات',
 				'type.required'=>'يجب أدخال نوع الخام',
+				'type.exists'=>'نوع الخام يجب أن يكون موجود بقاعدة البيانات',
 				'amount.required'=>'يجب أدخال الكمية',
 				'amount.numeric'=>'الكمية يجب أن تتكون من أرقام فقط',
-				'unit.required'=>'يجب أدخال الوحدة',
 				'value.numeric'=>'القيمة يجب أن تتكون من أرقام فقط',
 				'value.required'=>'يجب أدخال القيمة',
 				'amount_paid.numeric'=>'المبلغ المدفوع يجب أن يتكون من أرقام فقط',
@@ -147,8 +161,7 @@ class StoreController extends Controller {
 			$store->amount=$req->input('amount');
 			$store->amount_paid=$req->input('amount_paid');
 			$store->project_id=$req->input('project_id');
-			$store->contractor_id=$req->input('contractor_id');
-			$store->unit=$req->input('unit');
+			$store->supplier_id=$req->input('supplier_id');
 			$saved=$store->save();
 			if(!$saved){
 				return redirect()->back()->with('insert_error','حدث عطل خلال أضافة هذه الكمية من الخامو يرجى المحاولة فى وقت لاحق');
@@ -202,22 +215,21 @@ class StoreController extends Controller {
 		if(Auth::user()->type=='admin'){
 			$rules=[
 				'project_id'=>'required|exists:projects,id',
-				'contractor_id'=>'required|exists:contractors,id',
-				'type'=>'required',
+				'supplier_id'=>'required|exists:suppliers,id',
+				'type'=>'required|exists:store_types,name',
 				'amount'=>'required|numeric',
-				'unit'=>'required',
 				'value'=>'numeric',
 				'amount_paid'=>'numeric'
 			];
 			$error_messages=[
 				'project_id.required'=>'يجب أختيار مشروع',
 				'project_id.exists'=>'المشروع يجب أن يكون موجود بقاعدة البيانات',
-				'contractor_id.required'=>'يجب أختيار مقاول',
-				'contractor_id.exists'=>'المقاول يجب أن يكون موجود بقاعدة البيانات',
+				'supplier_id.required'=>'يجب أختيار مقاول',
+				'supplier_id.exists'=>'المقاول يجب أن يكون موجود بقاعدة البيانات',
 				'type.required'=>'يجب أدخال نوع الخام',
+				'type.exists'=>'نوع الخام يجب أن يكون موجود بقاعدة البيانات',
 				'amount.required'=>'يجب أدخال الكمية',
 				'amount.numeric'=>'الكمية يجب أن تتكون من أرقام فقط',
-				'unit.required'=>'يجب أدخال الوحدة',
 				'value.numeric'=>'القيمة يجب أن تتكون من أرقام فقط',
 				'amount_paid.numeric'=>'المبلغ المدفوع يجب أن يتكون من أرقام فقط'
 			];
@@ -231,8 +243,7 @@ class StoreController extends Controller {
 			$store->amount=$req->input('amount');
 			$store->amount_paid=$req->input('amount_paid');
 			$store->project_id=$req->input('project_id');
-			$store->contractor_id=$req->input('contractor_id');
-			$store->unit=$req->input('unit');
+			$store->supplier_id=$req->input('supplier_id');
 			$saved=$store->save();
 			if(!$saved){
 				return redirect()->back()->with('update_error','حدث عطل خلال أضافة هذه الكمية من الخامو يرجى المحاولة فى وقت لاحق');
@@ -252,7 +263,12 @@ class StoreController extends Controller {
 	public function destroy($id)
 	{
 		if(Auth::user()->type=='admin'){
-
+			$store=Store::findOrFail($id);
+			$deleted=$store->delete();
+			if(!$deleted){
+				return redirect()->back()->with('delete_error','حدث عطل خلال حذف كمية الخام , يرجى المحاولة فى وقت لاحق');
+			}
+			return redirect()->back()->with('success','تم حذف كمية الخام بنجاح');
 		}		
 		else
 			abort('404');	

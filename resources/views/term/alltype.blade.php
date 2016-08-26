@@ -25,6 +25,7 @@
 						<tr>
 							<th>#</th>
 							<th>نوع البند</th>
+							<th>تعديل</th>
 							<th style="width: 100px !important">حذف</th>
 						</tr>
 					</thead>
@@ -34,6 +35,11 @@
 						<tr>
 							<td>{{$count++}}</td>
 							<td>{{$type->name}}</td>
+							<td style="width: 100px !important">
+								<a href="{{ route('updatetermtype',$type->id) }}" class="btn btn-default btn-block">
+									تعديل
+								</a>
+							</td>
 							<td style="width: 100px !important">
 							<form method="post" action="{{ route('deletetermtype',$type->id) }}">
 								<button type="button" data-toggle="modal" data-target="#con{{$type->id}}" class="btn btn-danger btn-block">

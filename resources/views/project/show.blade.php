@@ -17,11 +17,59 @@
 					<br>
 				</div>
 			@endif
+			<ul class="nav nav-tabs">
+				<li class="active" role="presentation"><a href="">الرئيسية</a></li>
+				<li class="dropdown" role="presentation">
+					<a data-toggle="dropdown" class="dropdown-toggle" role="button" href="">مخازن <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="{{ route('addstores',['cid'=>0,'pid'=>$project->id]) }}">أضافة خامات</a></li>
+						<li><a href="{{ route('allstores',$project->id) }}">عرض جميع الخامات بالمشروع</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" role="presentation">
+					<a data-toggle="dropdown" class="dropdown-toggle" role="button" href="">رسومات <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="{{ route('addgraphs',$project->id) }}">أضافة رسم</a></li>
+						<li><a href="{{ route('allgraph',$project->id) }}">عرض جميع الرسومات</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" role="presentation">
+					<a data-toggle="dropdown" class="dropdown-toggle" role="button" href="">موظفيين <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="">تعيين موظف منتدب</a></li>
+						<li><a href="">عرض جميع الموظفين بالمشروع</a></li>
+					</ul>
+				</li>
+				
+				<li class="dropdown" role="presentation">
+					<a data-toggle="dropdown" class="dropdown-toggle" role="button" href="">حسابات مالية <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header">مستخلصات</li>
+						<li><a href="{{ route('createextractor',$project->id) }}">أضافة مستخلص</a></li>
+						<li><a href="{{ route('alltransaction',$project->id) }}">عرض أجمالى المستخلصات</a></li>
+						<li class="divider"></li>
+						<li class="dropdown-header">ضرائب</li>
+						<li><a href="{{ route('addtaxes',$project->id) }}">أضافة ضريبة</a></li>
+						<li><a href="{{ route('showtax',$project->id) }}">عرض جميع الضرائب</a></li>
+						<li class="divider"></li>
+						<li class="dropdown-header">أكراميات</li>
+						<li><a href="{{ route('addexpenses',$project->id) }}">أضافة أكرامية</a></li>
+						<li><a href="{{ route('showexpense',$project->id) }}">عرض جميع الأكراميات</a></li>
+						<li class="divider"></li>
+						<li class="dropdown-header">سلفات</li>
+						<li><a href="">أضافة سلفة</a></li>
+						<li><a href="">عرض جميع السلفات</a></li>
+					</ul>
+				</li>
+			</ul>
 			<a href="{{ url('term/add',$project->id) }}" class="float btn btn-primary width-100">
 				أضافة بند
 			</a>
 			<a href="{{ url('term/all',$project->id) }}" class="float btn btn-primary width-100">
 				جميع البنود
+			</a>
+			<a href="{{ route('showprojectproduction',$project->id) }}" class="float btn btn-primary">
+				أجمالى أنتاج المشروع
 			</a>
 			<a href="{{ route('updateproject',$project->id) }}" class="float btn btn-default width-100">
 				تعديل

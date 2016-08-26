@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Term;
 use App\Project;
 use Auth;
+use Route;
 use Validator;
 use Carbon\Carbon;
 use App\Contractor;
@@ -26,7 +27,17 @@ class TermController extends Controller {
 			{
 				$terms=Term::where('project_id',$id)->orderBy('code')->get();
 				$project=Project::findOrFail($id);
-				$array=['active'=>'term','terms'=>$terms,'project'=>$project];
+				if(Route::current()->getName()=='allterm')
+					$active='term';
+				elseif (Route::current()->getName()=='alltermstoaddproduction')
+					$active='pro';
+				elseif (Route::current()->getName()=='alltermstoshowproduction')
+					$active='pro';
+				elseif (Route::current()->getName()=='termconsumption')
+					$active='cons';
+				elseif (Route::current()->getName()=='showtermtoaddconsumption')
+					$active='cons';
+				$array=['active'=>$active,'terms'=>$terms,'project'=>$project];
 				return view('term.all',$array);
 			}
 			else

@@ -41,4 +41,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		return $this->hasOne('App\Contractor');
 	}
+
+	/**
+	 * Define the relationship with Logs
+	 *
+	 * 
+	 */
+	public function logs()
+	{
+		return $this->hasMany('App\Log');
+	}	
 }

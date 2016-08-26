@@ -9,11 +9,6 @@ class Contractor extends Model {
 	{
 		return $this->belongsTo('App\User');
 	}
-	//1 to many with store
-	public function stores()
-	{
-		return $this->hasMany('App\Store');
-	}
 	//Define the one to many relationship with terms
 	public function terms()
 	{

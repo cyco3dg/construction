@@ -6,12 +6,12 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="icon" type="image/png" href="{{ asset('icon2.png') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/js.css') }}">
+	<link rel="stylesheet" href="{{ asset('js/js.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 	<script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}">
 	</script>
-	<script src="{{ asset('js/jquery-ui.js') }}"></script>
+	<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
 </head>
 <body>
@@ -159,18 +159,6 @@
 				</a>
 				</li>
 				<li>
-				<a href="{{ route('alllabor') }}">
-					<span class="glyphicon glyphicon-tasks" aria-hidden="true"> </span> 
-					جميع مقاوليين العمالة
-				</a>
-				</li>
-				<li>
-				<a href="{{ route('allraw') }}">
-					<span class="glyphicon glyphicon-th" aria-hidden="true"> </span> 
-					جميع مقاوليين الخامات 
-				</a>
-				</li>
-				<li>
 				<a href="{{ route('allcontractor') }}">
 					<span class="glyphicon glyphicon-tasks" aria-hidden="true"> </span> 
 					جميع المقاوليين
@@ -178,10 +166,24 @@
 				</li>
 			</ul>
 		</li>
-		<li @if($active=="graph")class="active"@endif>
+		<li @if($active=="sup")class="active"@endif>
 			<a href="#" class="side-link">
-			<span class="glyphicon glyphicon-blackboard" aria-hidden="true"> </span> رسومات
+			<span class="glyphicon glyphicon-import" aria-hidden="true"> </span> موردون
 			</a>
+			<ul class="nav child-options">
+				<li>
+				<a href="{{ route('addsupplier') }}">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> 
+					أضافة مورد
+				</a>
+				</li>
+				<li>
+				<a href="{{ route('allsupplier') }}">
+					<span class="glyphicon glyphicon-tasks" aria-hidden="true"> </span> 
+					جميع الموردين
+				</a>
+				</li>
+			</ul>
 		</li>
 		<li @if($active=="store")class="active"@endif>
 			<a href="#" class="side-link">
@@ -189,43 +191,92 @@
 			</a>
 			<ul class="nav child-options">
 				<li><a href="{{ route('addstore') }}">شراء خامات</a></li>
-				<li><a href="{{ route('findstores') }}">جميع اخامات بالمخازن</a></li>
-				<li><a href=""></a></li>
+				<li><a href="{{ route('findstores') }}">جميع الخامات بالمخازن</a></li>
+				<li><a href="{{ route('addstoretype') }}">أضافة نوع خام جديد</a></li>
+				<li><a href="{{ route('allstoretype') }}">جميع أنواع الخامات</a></li>
 			</ul>
 		</li>
-		<li @if($active=="con")class="active"@endif>
-			<a href="#">
+		<li @if($active=="cons")class="active"@endif>
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-export" aria-hidden="true"> </span> أستهلاك
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('showprojecttoaddconsumption') }}">أضافة أستهلاك</a></li>
+				<li><a href="{{ route('selecttermconsumption') }}">جميع الأستهلاك بالبند</a></li>
+				<li><a href="{{ route('selectprojectconsumption') }}">جميع الأستهلاك بالمشروع</a></li>
+			</ul>
 		</li>
 		<li @if($active=="pro")class="active"@endif>
-			<a href="#">
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-saved" aria-hidden="true"> </span> أنتاج
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('findtermstoaddproduction') }}">أضافة أنتاج</a></li>
+				<li><a href="{{ route('findproductionforterm') }}">أجمالى أنتاج البند</a></li>
+				<li><a href="{{ route('findproduction') }}">أجمالى أنتاج المشروع</a></li>
+			</ul>
+		</li>
+		<li @if($active=="graph")class="active"@endif>
+			<a href="#" class="side-link">
+			<span class="glyphicon glyphicon-blackboard" aria-hidden="true"> </span> رسومات
+			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('addgraphs') }}">أضافة رسم</a></li>
+				<li><a href="{{ route('chooseprojectgraph') }}">جميع الرسومات بالمشروع</a></li>
+			</ul>
 		</li>
 		<li @if($active=="emp")class="active"@endif>
-			<a href="#">
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-user" aria-hidden="true"> </span> موظفيين
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('addemployee') }}">أضافة موظف</a></li>
+				<li><a href="{{ route('allcompanyemployee') }}">جميع موظفيين الشركة</a></li>
+				<li><a href="{{ route('allemployee') }}">جميع الموظفيين المنتدبيين</a></li>
+				<li><a href="{{ route('chooseprojectemployee') }}">جميع الموظفيين المنتدبيين بالمشروع</a></li>
+			</ul>
 		</li>
 		<li @if($active=="tax")class="active"@endif>
-			<a href="#">
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-euro" aria-hidden="true"> </span> ضرائب
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('addtaxes') }}">أضافة ضريبة</a></li>
+				<li><a href="{{ route('chooseprojecttax') }}">أجمالى ضرائب المشروع</a></li>
+			</ul>
 		</li>
 		<li @if($active=="exp")class="active"@endif>
-			<a href="#">
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-euro" aria-hidden="true"> </span> أكراميات
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('addexpenses') }}">أضافة أكرامية</a></li>
+				<li><a href="{{ route('chooseprojectexpense') }}">أجمالى أكراميات المشروع</a></li>
+			</ul>
 		</li>
 		<li @if($active=="adv")class="active"@endif>
-			<a href="#">
+			<a href="#" class="side-link">
 			<span class="glyphicon glyphicon-euro" aria-hidden="true"> </span> سلفات
 			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('addcompanyadvances') }}">أضافة سلفة إلى موظف بالشركة</a></li>
+				<li><a href="{{ route('addadvances') }}">أضافة سلفة إلى موظف منتدب</a></li>
+				<li><a href="{{ route('alladvance') }}">جميع السلفات</a></li>
+			</ul>
+		</li>
+		<li @if($active=="trans")class="active"@endif>
+			<a href="#" class="side-link">
+			<span class="glyphicon glyphicon-euro" aria-hidden="true"> </span> الحسابات المالية
+			</a>
+			<ul class="nav child-options">
+				<li><a href="{{ route('chooseprojectextractor') }}">أنشاء أو عرض مستخلص</a></li>
+				<li><a href="{{ route('chooseprojecttransaction') }}">أجمالى المستخلصات</a></li>
+				<li><a href="{{ route('chooseprojecttransaction') }}">أجمالى المعاملات</a></li>
+			</ul>
 		</li>
 		<li @if($active=="user")class="active"@endif>
 			<a href="#" class="side-link">
-			<span class="glyphicon glyphicon-user" aria-hidden="true"> </span> حسابات
+			<span class="glyphicon glyphicon-user" aria-hidden="true"> </span> الحسابات الشخصية
 			</a>
 			<ul class="nav child-options">
 				<li>

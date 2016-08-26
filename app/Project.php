@@ -37,12 +37,24 @@ class Project extends Model {
 	//Define the many to many relationship with employees
 	public function employees()
 	{
-		return $this->belongsToMany('App\Employee');
+		return $this->belongsToMany('App\Employee')->withPivot('salary','done','ended_at')->withTimestamps();
 	}
 
 	//has many consumptions through terms
 	public function consumptions()
-	 {
-	 	return $this->hasManyThrough('App\Consumption','App\Term');
-	 } 
+	{
+		return $this->hasManyThrough('App\Consumption','App\Term');
+	}
+
+	//has many productions through terms
+	public function productions()
+	{
+		return $this->hasManyThrough('App\Production','App\Term');
+	}  
+
+	//has many transactions through terms
+	public function transactions()
+	{
+		return $this->hasManyThrough('App\Transaction','App\Term');
+	}
 }
